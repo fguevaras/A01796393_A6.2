@@ -17,7 +17,7 @@ class Customer:
         self.phone = phone
 
     # ------------------------------------------------------------------ #
-    # a. Create Customer                                                   #
+    # a. Create Customer                                                 #
     # ------------------------------------------------------------------ #
     @staticmethod
     def create_customer(customer_id, name, email, phone, file_path=None):
@@ -36,7 +36,7 @@ class Customer:
         return customer
 
     # ------------------------------------------------------------------ #
-    # b. Delete a Customer                                                 #
+    # b. Delete a Customer                                               #
     # ------------------------------------------------------------------ #
     @staticmethod
     def delete_customer(customer_id, file_path=None):
@@ -54,7 +54,7 @@ class Customer:
         return True
 
     # ------------------------------------------------------------------ #
-    # c. Display Customer Information                                      #
+    # c. Display Customer Information                                    #
     # ------------------------------------------------------------------ #
     @staticmethod
     def display_customer_info(customer_id, file_path=None):
@@ -75,7 +75,7 @@ class Customer:
         return customer
 
     # ------------------------------------------------------------------ #
-    # d. Modify Customer Information                                       #
+    # d. Modify Customer Information                                     #
     # ------------------------------------------------------------------ #
     @staticmethod
     def modify_customer(customer_id, file_path=None, **kwargs):
@@ -100,7 +100,7 @@ class Customer:
         return True
 
     # ------------------------------------------------------------------ #
-    # Helper methods                                                       #
+    # Helper methods                                                     #
     # ------------------------------------------------------------------ #
     def to_dict(self):
         """Convert the Customer instance to a dictionary."""
