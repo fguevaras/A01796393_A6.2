@@ -10,7 +10,7 @@ sys.path.insert(
     0, os.path.join(os.path.dirname(__file__), '..', 'source')
 )
 
-from hotel import Hotel  # noqa: E402
+from hotel import Hotel  # noqa: E402  # pylint: disable=wrong-import-position
 
 
 class TestHotel(unittest.TestCase):

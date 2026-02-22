@@ -10,7 +10,9 @@ sys.path.insert(
     0, os.path.join(os.path.dirname(__file__), '..', 'source')
 )
 
+# pylint: disable=wrong-import-position
 from reservation import Reservation  # noqa: E402
+# pylint: enable=wrong-import-position
 
 
 class TestReservation(unittest.TestCase):
