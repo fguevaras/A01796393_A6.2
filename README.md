@@ -13,15 +13,20 @@ unit tests.
   - `source/customer.py` — Customer class (create, delete, display, modify)
   - `source/reservation.py` — Reservation class (create, cancel)
 - **Unit Tests:**
-  - `tests/test_hotel.py` — 22 test cases for the Hotel class
-  - `tests/test_customer.py` — 15 test cases for the Customer class
-  - `tests/test_reservation.py` — 12 test cases for the Reservation class
+  - `tests/test_hotel.py` — 25 test cases for the Hotel class
+  - `tests/test_customer.py` — 18 test cases for the Customer class
+  - `tests/test_reservation.py` — 15 test cases for the Reservation class
+  - `tests/data/hotels.json` — fixture data file for hotel tests
+  - `tests/data/customers.json` — fixture data file for customer tests
+  - `tests/data/reservations.json` — fixture data file for reservation tests
 - **Linter Config:** `.pylintrc` — project-wide pylint settings
+- **Results:** `results/` — screenshots of test, coverage, and linter outputs
 
 ## Requirements
 - Python 3.x
 - `unittest` (built-in, for writing unit tests)
 - `pytest` (for running unit tests)
+- `pytest-cov` (for measuring code coverage)
 - `pylint` (for static code analysis)
 - `flake8` (for style checking)
 - `autopep8` (for automatic PEP 8 formatting)
@@ -70,7 +75,7 @@ false positives or intentional design choices:
 |---------|--------|
 | `source-roots=source` | Tells pylint where to find the source modules so that imports in test files resolve correctly and `E0401` (import-error) is eliminated. |
 | `disable=R0801` | `R0801` (duplicate-code) flagged structural similarities across the three classes (Hotel, Customer, Reservation). These similarities are intentional and a natural result of the uniform CRUD interface; suppressing the check avoids noise without hiding real issues. |
-| `max-public-methods=25` | The `Hotel` class exposes more than the default limit of 20 public methods due to its richer API (reserve room, cancel reservation, etc.). Raising the limit to 25 reflects the domain requirement rather than poor design. |
+| `max-public-methods=30` | The `Hotel` class and its test suite expose more than the default limit of 20 public methods due to its richer API (reserve room, cancel reservation, etc.) and the expanded test suite. Raising the limit to 30 reflects the domain requirement rather than poor design. |
 
 ### `# pylint: disable=wrong-import-position` (block-level)
 The test files insert the `source/` directory into `sys.path` before
