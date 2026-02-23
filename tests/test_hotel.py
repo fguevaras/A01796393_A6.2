@@ -2,6 +2,7 @@
 
 import json
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -11,6 +12,8 @@ sys.path.insert(
 )
 
 from hotel import Hotel  # noqa: E402  # pylint: disable=wrong-import-position
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
 class TestHotel(unittest.TestCase):
@@ -28,7 +31,7 @@ class TestHotel(unittest.TestCase):
             os.remove(self.file_path)
 
     # ------------------------------------------------------------------ #
-    # create_hotel                                                       #
+    # Create Hotel                                                       #
     # ------------------------------------------------------------------ #
     def test_create_hotel_success(self):
         """Create a hotel and verify its attributes."""
@@ -65,7 +68,7 @@ class TestHotel(unittest.TestCase):
         self.assertIsNone(result)
 
     # ------------------------------------------------------------------ #
-    # delete_hotel                                                       #
+    # Delete Hotel                                                       #
     # ------------------------------------------------------------------ #
     def test_delete_hotel_success(self):
         """Delete an existing hotel returns True and removes it."""
@@ -84,7 +87,7 @@ class TestHotel(unittest.TestCase):
         self.assertFalse(result)
 
     # ------------------------------------------------------------------ #
-    # display_hotel_info                                                 #
+    # Display Hotel information                                          #
     # ------------------------------------------------------------------ #
     def test_display_hotel_info_success(self):
         """Display info for an existing hotel returns Hotel instance."""
@@ -106,7 +109,7 @@ class TestHotel(unittest.TestCase):
         self.assertIsNone(result)
 
     # ------------------------------------------------------------------ #
-    # modify_hotel                                                       #
+    # Modify Hotel Information                                           #
     # ------------------------------------------------------------------ #
     def test_modify_hotel_success(self):
         """Modify hotel name successfully."""
@@ -140,7 +143,7 @@ class TestHotel(unittest.TestCase):
         self.assertTrue(result)
 
     # ------------------------------------------------------------------ #
-    # reserve_room                                                         #
+    # Reserve a Room                                                     #
     # ------------------------------------------------------------------ #
     def test_reserve_room_success(self):
         """Reserve a room decrements available_rooms and logs ID."""
@@ -188,7 +191,7 @@ class TestHotel(unittest.TestCase):
         self.assertFalse(result)
 
     # ------------------------------------------------------------------ #
-    # cancel_reservation                                                   #
+    # Cancel a Reservation                                               #
     # ------------------------------------------------------------------ #
     def test_cancel_reservation_success(self):
         """Cancel a reservation restores available_rooms."""
@@ -270,6 +273,36 @@ class TestHotel(unittest.TestCase):
             json.dump({'H001': {'hotel_id': 'H001'}}, file)
         hotels = Hotel.load_hotels(self.file_path)
         self.assertEqual(hotels, {})
+
+    # ------------------------------------------------------------------ #
+    # Data file tests                                                    #
+    # ------------------------------------------------------------------ #
+
+    def test_load_hotels_from_data_file(self):
+        """Load hotels from the pre-existing data file."""
+        src = os.path.join(DATA_DIR, 'hotels.json')
+        hotels = Hotel.load_hotels(src)
+        self.assertIn('H001', hotels)
+        self.assertIn('H002', hotels)
+        self.assertEqual(hotels['H001'].name, 'Hotel Riviera Maya')
+        self.assertEqual(hotels['H001'].available_rooms, 98)
+        self.assertIn('R001', hotels['H001'].reservations)
+
+    def test_display_hotel_from_data_file(self):
+        """Display hotel info loaded from the pre-existing data file."""
+        shutil.copy(os.path.join(DATA_DIR, 'hotels.json'), self.file_path)
+        hotel = Hotel.display_hotel_info('H002', file_path=self.file_path)
+        self.assertIsNotNone(hotel)
+        self.assertEqual(hotel.location, 'Nuevo Vallarta')
+
+    def test_create_hotel_duplicate_from_data_file(self):
+        """Creating a duplicate hotel ID from data file returns None."""
+        shutil.copy(os.path.join(DATA_DIR, 'hotels.json'), self.file_path)
+        result = Hotel.create_hotel(
+            'H001', 'Duplicate', 'Nowhere', 10,
+            file_path=self.file_path
+        )
+        self.assertIsNone(result)
 
 
 if __name__ == '__main__':

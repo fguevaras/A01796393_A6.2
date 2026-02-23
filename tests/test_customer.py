@@ -2,6 +2,7 @@
 
 import json
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,8 @@ sys.path.insert(
 # pylint: disable=wrong-import-position
 from customer import Customer  # noqa: E402
 # pylint: enable=wrong-import-position
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
 class TestCustomer(unittest.TestCase):
@@ -30,7 +33,7 @@ class TestCustomer(unittest.TestCase):
             os.remove(self.file_path)
 
     # ------------------------------------------------------------------ #
-    # create_customer                                                    #
+    # Create Customer                                                    #
     # ------------------------------------------------------------------ #
     def test_create_customer_success(self):
         """Create a customer and verify its attributes."""
@@ -66,7 +69,7 @@ class TestCustomer(unittest.TestCase):
         self.assertIsNone(result)
 
     # ------------------------------------------------------------------ #
-    # delete_customer                                                    #
+    # Delete a Customer                                                  #
     # ------------------------------------------------------------------ #
     def test_delete_customer_success(self):
         """Delete an existing customer returns True and removes it."""
@@ -87,7 +90,7 @@ class TestCustomer(unittest.TestCase):
         self.assertFalse(result)
 
     # ------------------------------------------------------------------ #
-    # display_customer_info                                              #
+    # Display Customer Information                                       #
     # ------------------------------------------------------------------ #
     def test_display_customer_info_success(self):
         """Display info for an existing customer returns Customer instance."""
@@ -109,7 +112,7 @@ class TestCustomer(unittest.TestCase):
         self.assertIsNone(result)
 
     # ------------------------------------------------------------------ #
-    # modify_customer                                                    #
+    # Modify Customer Information                                        #
     # ------------------------------------------------------------------ #
     def test_modify_customer_success(self):
         """Modify customer email successfully."""
@@ -188,6 +191,37 @@ class TestCustomer(unittest.TestCase):
             json.dump({'C001': {'customer_id': 'C001'}}, file)
         customers = Customer.load_customers(self.file_path)
         self.assertEqual(customers, {})
+
+    # ------------------------------------------------------------------ #
+    # Data file tests                                                    #
+    # ------------------------------------------------------------------ #
+
+    def test_load_customers_from_data_file(self):
+        """Load customers from the pre-existing data file."""
+        src = os.path.join(DATA_DIR, 'customers.json')
+        customers = Customer.load_customers(src)
+        self.assertIn('C001', customers)
+        self.assertIn('C002', customers)
+        self.assertEqual(customers['C001'].name, 'Juan Perez')
+        self.assertEqual(customers['C002'].email, 'maria@example.com')
+
+    def test_display_customer_from_data_file(self):
+        """Display customer info loaded from the pre-existing data file."""
+        shutil.copy(os.path.join(DATA_DIR, 'customers.json'), self.file_path)
+        customer = Customer.display_customer_info(
+            'C001', file_path=self.file_path
+        )
+        self.assertIsNotNone(customer)
+        self.assertEqual(customer.phone, '555-1234')
+
+    def test_create_customer_duplicate_from_data_file(self):
+        """Creating a duplicate customer ID from data file returns None."""
+        shutil.copy(os.path.join(DATA_DIR, 'customers.json'), self.file_path)
+        result = Customer.create_customer(
+            'C001', 'Duplicate', 'dup@example.com', '000-0000',
+            file_path=self.file_path
+        )
+        self.assertIsNone(result)
 
 
 if __name__ == '__main__':

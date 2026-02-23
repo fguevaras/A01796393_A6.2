@@ -1,0 +1,12 @@
+{
+    "R001": {
+        "reservation_id": "R001",
+        "customer_id": "C001",
+        "hotel_id": "H001"
+    },
+    "R002": {
+        "reservation_id": "R002",
+        "customer_id": "C002",
+        "hotel_id": "H001"
+    }
+}

@@ -2,6 +2,7 @@
 
 import json
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,8 @@ sys.path.insert(
 # pylint: disable=wrong-import-position
 from reservation import Reservation  # noqa: E402
 # pylint: enable=wrong-import-position
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 
 class TestReservation(unittest.TestCase):
@@ -150,6 +153,42 @@ class TestReservation(unittest.TestCase):
         reservations = Reservation.load_reservations(self.file_path)
         self.assertNotIn('R001', reservations)
         self.assertIn('R002', reservations)
+
+    # ------------------------------------------------------------------ #
+    # Data file tests                                                    #
+    # ------------------------------------------------------------------ #
+
+    def test_load_reservations_from_data_file(self):
+        """Load reservations from the pre-existing data file."""
+        src = os.path.join(DATA_DIR, 'reservations.json')
+        reservations = Reservation.load_reservations(src)
+        self.assertIn('R001', reservations)
+        self.assertIn('R002', reservations)
+        self.assertEqual(reservations['R001'].customer_id, 'C001')
+        self.assertEqual(reservations['R002'].hotel_id, 'H001')
+
+    def test_cancel_reservation_from_data_file(self):
+        """Cancel a reservation that exists in the pre-existing data file."""
+        shutil.copy(
+            os.path.join(DATA_DIR, 'reservations.json'), self.file_path
+        )
+        result = Reservation.cancel_reservation(
+            'R001', file_path=self.file_path
+        )
+        self.assertTrue(result)
+        reservations = Reservation.load_reservations(self.file_path)
+        self.assertNotIn('R001', reservations)
+        self.assertIn('R002', reservations)
+
+    def test_create_reservation_duplicate_from_data_file(self):
+        """Creating a duplicate reservation ID from data file returns None."""
+        shutil.copy(
+            os.path.join(DATA_DIR, 'reservations.json'), self.file_path
+        )
+        result = Reservation.create_reservation(
+            'R001', 'C003', 'H002', file_path=self.file_path
+        )
+        self.assertIsNone(result)
 
 
 if __name__ == '__main__':
