@@ -1,0 +1,18 @@
+{
+    "H001": {
+        "hotel_id": "H001",
+        "name": "Hotel Riviera Maya",
+        "location": "Playa del Carmen",
+        "total_rooms": 100,
+        "available_rooms": 98,
+        "reservations": ["R001", "R002"]
+    },
+    "H002": {
+        "hotel_id": "H002",
+        "name": "Grand Velas",
+        "location": "Nuevo Vallarta",
+        "total_rooms": 50,
+        "available_rooms": 50,
+        "reservations": []
+    }
+}
